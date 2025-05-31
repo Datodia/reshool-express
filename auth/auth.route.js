@@ -33,7 +33,7 @@ authRouter.post('/sign-in', async (req, res) => {
         return res.status(400).json({message: 'email and password is required'})
     }
 
-    const existUser = await userModel.findOne({email}).select('password')
+    const existUser = await userModel.findOne({email}).select('password role')
     if(!existUser){
         return res.status(400).json({message: 'emial or password is invalid'})
     }
@@ -44,7 +44,8 @@ authRouter.post('/sign-in', async (req, res) => {
     }
 
     const payload = {
-        userId: existUser._id
+        userId: existUser._id,
+        role: existUser.role
     }
 
     const token = await jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '1h'})
