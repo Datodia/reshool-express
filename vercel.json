@@ -8,8 +8,17 @@
     ],
     "routes": [
         {
+            "src": "/docs/(.*)",
+            "dest": "main.js"
+        },
+        {
             "src": "/(.*)",
             "dest": "main.js"
         }
-    ]
+    ],
+    "functions": {
+        "main.js": {
+            "includeFiles": "node_modules/swagger-ui-dist/**"
+        }
+    }
 }
