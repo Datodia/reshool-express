@@ -8,7 +8,12 @@ const app = express()
 const cors = require('cors')
 const multer = require('multer')
 const path = require('path')
-const {upload} = require('./config/clodinary.config')
+const { upload } = require('./config/clodinary.config')
+const swagger = require('./swagger.js')
+const swaggerJSDoc = require('swagger-jsdoc')
+const swaggerUI = require('swagger-ui-express')
+
+
 
 // const storage = multer.diskStorage({
 //     destination: (req, file, cb) => {
@@ -21,11 +26,12 @@ const {upload} = require('./config/clodinary.config')
 
 // const upload = multer({storage})
 
-connectToDb()
 
 app.use(cors())
 app.use(express.json())
 app.use(express.static('uploads'))
+const specs = swaggerJSDoc(swagger)
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(specs))
 
 app.use('/users', isAuth, userRouter)
 app.use('/posts', isAuth, postRouter)
@@ -39,8 +45,10 @@ app.get('/', (req, res) => {
     res.send('hello world')
 })
 
-app.listen(3000, () => {
-    console.log(`server running on http://localhost:3000`)
+connectToDb().then(res => {
+    app.listen(3000, () => {
+        console.log(`server running on http://localhost:3000`)
+    })
 })
 
 
