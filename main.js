@@ -29,9 +29,20 @@ const swaggerUI = require('swagger-ui-express')
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static('uploads'))
+app.use(express.static('public'))
+
+
 const specs = swaggerJSDoc(swagger)
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(specs))
+
+const options = {
+  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.6.3/swagger-ui.min.css',
+  customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.6.3/swagger-ui-bundle.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.6.3/swagger-ui-standalone-preset.js',
+  ],
+};
+
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(specs, options))
 
 app.use('/users', isAuth, userRouter)
 app.use('/posts', isAuth, postRouter)
