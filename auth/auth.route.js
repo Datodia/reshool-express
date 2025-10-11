@@ -4,6 +4,7 @@ const userModel = require("../models/user.model");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const isAuth = require("../middlewares/isAuth.middleware");
+const passport = require("../config/google.stategy");
 require('dotenv').config()
 
 const authRouter = Router()
@@ -73,6 +74,33 @@ authRouter.post('/sign-up', async (req, res) => {
     await userModel.create({ fullName, password: hashedPass, email })
     res.status(201).json({ message: "user regisgted successfully" })
 
+})
+
+authRouter.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}))
+
+authRouter.get('/google/callback', passport.authenticate('google', {session: false}), async (req, res) =>{
+    console.log(req.user, "user")
+
+    let existUser = await userModel.findOne({email: req.user.email})
+
+    if(!existUser){
+        existUser = await userModel.create({
+            avatar: req.user.avatar,
+            email: req.user.email,
+            fullName: req.user.fullName,
+            role: 'user',
+        })
+    }
+
+    await userModel.findByIdAndUpdate(existUser._id, {avatar: req.user.avatar})
+     const payload = {
+        userId: existUser._id,
+        role: existUser.role
+    }
+
+    const token = await jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' })
+
+    res.redirect(`http://localhost:5173/sign-in?token=${token}`)
 })
 
 /**
