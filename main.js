@@ -12,6 +12,7 @@ const { upload } = require('./config/clodinary.config')
 const swagger = require('./swagger.js')
 const swaggerJSDoc = require('swagger-jsdoc')
 const swaggerUI = require('swagger-ui-express')
+const stripeRouter = require('./stripe/stripe.route')
 
 
 
@@ -39,6 +40,7 @@ app.use('/docs', swaggerUI.serve, swaggerUI.setup(specs))
 app.use('/users', isAuth, userRouter)
 app.use('/posts', isAuth, postRouter)
 app.use('/auth', authRouter)
+app.use('/stripe', stripeRouter)
 
 app.post('/upload', upload.single('image'), (req, res) => {
     res.send(req.file)
