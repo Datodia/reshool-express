@@ -79,8 +79,6 @@ authRouter.post('/sign-up', async (req, res) => {
 authRouter.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}))
 
 authRouter.get('/google/callback', passport.authenticate('google', {session: false}), async (req, res) =>{
-    console.log(req.user, "user")
-
     let existUser = await userModel.findOne({email: req.user.email})
 
     if(!existUser){
@@ -100,7 +98,7 @@ authRouter.get('/google/callback', passport.authenticate('google', {session: fal
 
     const token = await jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' })
 
-    res.redirect(`http://localhost:5173/sign-in?token=${token}`)
+    res.redirect(`${process.env.FRONT_END_URL}/sign-in?token=${token}`)
 })
 
 /**
