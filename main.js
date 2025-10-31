@@ -46,7 +46,12 @@ app.post('/upload', upload.single('image'), (req, res) => {
 })
 
 app.get('/', (req, res) => {
-    res.send('hello world')
+    res.send(
+        `
+            <h1>Hello World</h1>
+            <a href="/docs">Docs</a>
+        `
+    )
 })
 
 connectToDb().then(res => {
