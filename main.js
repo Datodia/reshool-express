@@ -9,9 +9,9 @@ const cors = require('cors')
 const multer = require('multer')
 const path = require('path')
 const { upload } = require('./config/clodinary.config')
-const swagger = require('./swagger.js')
 const swaggerJSDoc = require('swagger-jsdoc')
 const swaggerUI = require('swagger-ui-express')
+const swagger = require('./swagger.js')
 const stripeRouter = require('./stripe/stripe.route')
 
 
@@ -34,7 +34,6 @@ app.use(express.static('public'))
 
 
 const specs = swaggerJSDoc(swagger)
-
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(specs))
 
 app.use('/users', isAuth, userRouter)
