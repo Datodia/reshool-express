@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
         ref: 'post',
         default: []
     },
+    orders: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'order',
+        default: []
+    },
     role: {
         type: String,
         enum: ['user', 'admin'],
